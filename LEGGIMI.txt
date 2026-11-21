@@ -1,9 +1,0 @@
-LE PAROLINE DI BEA PER iOS E iPadOS
-
-Apri Bea.xcodeproj in Xcode su un Mac. Richiede iOS o iPadOS 16 o successivo.
-Per una prova seleziona Bea e un simulatore iPhone o iPad, poi premi Run.
-Per provare su un dispositivo, seleziona il tuo Team in Signing & Capabilities.
-Se l’identificativo è già in uso, modifica PRODUCT_BUNDLE_IDENTIFIER in Bea.xcconfig.
-
-Il gioco e i versi sono inclusi nel progetto. La pronuncia usa le voci
-italiane di iOS e privilegia una voce femminile quando disponibile.
