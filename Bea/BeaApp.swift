@@ -29,6 +29,10 @@ struct GameView: UIViewRepresentable {
         return view
     }
 
+    func updateUIView(_ view: WKWebView, context: Context) {
+        // The web view manages its own game state after loading.
+    }
+
     static func dismantleUIView(_ view: WKWebView, coordinator: Coordinator) {
         view.configuration.userContentController.removeScriptMessageHandler(forName: "beaSpeech")
         coordinator.speech.stopSpeaking(at: .immediate)
