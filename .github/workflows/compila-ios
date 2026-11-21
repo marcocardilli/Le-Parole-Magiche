@@ -1,1 +1,31 @@
+name: Compila Le Paroline di Bea
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  simulator:
+    name: Compilazione per il simulatore iOS
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compila con Xcode
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcodebuild -project Bea.xcodeproj -target Bea \
+            -configuration Debug -sdk iphonesimulator \
+            CONFIGURATION_BUILD_DIR="$RUNNER_TEMP/bea-build" \
+            CODE_SIGNING_ALLOWED=NO build
+          ditto -c -k --keepParent "$RUNNER_TEMP/bea-build/Bea.app" "$RUNNER_TEMP/Bea-simulatore.zip"
+      - name: Salva l’app per il simulatore
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bea-simulatore
+          path: ${{ runner.temp }}/Bea-simulatore.zip
+          if-no-files-found: error
 
