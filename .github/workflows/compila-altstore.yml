@@ -1,0 +1,52 @@
+name: Compila Bea per AltStore
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  device:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verifica i quattro versi inclusi
+        shell: bash
+        run: |
+          set -euo pipefail
+          missing=0
+          for animal in cane gatto mucca papera; do
+            file="Bea/Game/audio/$animal.mp3"
+            if [[ ! -s "$file" ]] || ! afinfo "$file" >/dev/null 2>&1; then
+              echo "::error file=$file::Carica un file MP3 valido in $file"
+              missing=1
+            fi
+          done
+          exit "$missing"
+      - name: Compila per iPhone e iPad
+        run: |
+          set -euo pipefail
+          xcodebuild -project Bea.xcodeproj -target Bea \
+            -configuration Release -sdk iphoneos \
+            ARCHS=arm64 CONFIGURATION_BUILD_DIR="$RUNNER_TEMP/bea-device" \
+            CODE_SIGNING_ALLOWED=NO build
+      - name: Crea il file IPA per AltStore
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/bea-device/Bea.app"
+          test -x "$app/Bea"
+          test -f "$app/Game/index.html"
+          xcrun vtool -show-build "$app/Bea" | grep -Eq 'platform[[:space:]]+IOS$'
+          staging="$(mktemp -d)"
+          mkdir "$staging/Payload"
+          ditto "$app" "$staging/Payload/Bea.app"
+          ditto -c -k --keepParent "$staging/Payload" "$RUNNER_TEMP/Le-Paroline-di-Bea.ipa"
+          unzip -tq "$RUNNER_TEMP/Le-Paroline-di-Bea.ipa"
+      - name: Pubblica il file IPA tra gli artefatti
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bea-AltStore
+          path: ${{ runner.temp }}/Le-Paroline-di-Bea.ipa
+          if-no-files-found: error
