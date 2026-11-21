@@ -1,0 +1,39 @@
+name: Compila Bea per AltStore
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  device:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compila per iPhone e iPad
+        run: |
+          set -euo pipefail
+          xcodebuild -project Bea.xcodeproj -target Bea \
+            -configuration Release -sdk iphoneos \
+            ARCHS=arm64 CONFIGURATION_BUILD_DIR="$RUNNER_TEMP/bea-device" \
+            CODE_SIGNING_ALLOWED=NO build
+      - name: Crea il file IPA per AltStore
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/bea-device/Bea.app"
+          test -x "$app/Bea"
+          test -f "$app/Game/index.html"
+          xcrun vtool -show-build "$app/Bea" | grep -Eq 'platform[[:space:]]+IOS$'
+          staging="$(mktemp -d)"
+          mkdir "$staging/Payload"
+          ditto "$app" "$staging/Payload/Bea.app"
+          ditto -c -k --keepParent "$staging/Payload" "$RUNNER_TEMP/Le-Paroline-di-Bea.ipa"
+          unzip -tq "$RUNNER_TEMP/Le-Paroline-di-Bea.ipa"
+      - name: Pubblica il file IPA tra gli artefatti
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bea-AltStore
+          path: ${{ runner.temp }}/Le-Paroline-di-Bea.ipa
+          if-no-files-found: error
