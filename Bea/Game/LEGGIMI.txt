@@ -1,0 +1,12 @@
+LE PAROLINE DI BEA
+
+Per provare il gioco su un computer, estrai lo ZIP e apri index.html.
+Tocca le lettere per comporre una parola, Cancella per togliere l'ultima
+lettera e Ascolta per sentirla in italiano. I versi sono imitazioni sonore
+incluse nell'app e si attivano toccando i quattro animali.
+
+Per installare la PWA, pubblica tutti i file dello ZIP (inclusa la cartella
+audio) su un sito statico HTTPS. Su iPhone e iPad apri l'indirizzo in Safari,
+tocca Condividi, poi Aggiungi alla schermata Home. Se compare l'opzione
+Apri come app web, lasciala attiva. Dopo il primo caricamento, il gioco e
+i versi sono disponibili offline. La lettura usa le voci del dispositivo.
