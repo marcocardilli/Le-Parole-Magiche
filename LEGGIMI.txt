@@ -20,3 +20,12 @@ COMPILARE CON GITHUB ACTIONS DA WINDOWS
 Il risultato è un'app per il simulatore iOS su Mac. Per installare il gioco
 su un iPhone o iPad fisico occorrono una compilazione per dispositivo e
 la firma Apple. Il flusso incluso verifica la compilazione per simulatore.
+
+VERSIONE 1.1 PER ALTSTORE CLASSIC
+
+Flusso GitHub: .github/workflows/compila-altstore.yml.
+La compilazione incorpora quattro effetti CC0 di SFXMint:
+https://sfxmint.com/sets/animal-calls
+File: animal-dog-bark-25, animal-cat-meow-34, cow-moo-02, duck-quack-02.
+Per compilare fuori da GitHub, esegui prima il passaggio di download
+del flusso dalla radice del progetto.

@@ -44,14 +44,23 @@ struct GameView: UIViewRepresentable {
         func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
             guard message.frameInfo.isMainFrame else { return }
             speech.stopSpeaking(at: .immediate)
-            guard let text = message.body as? String, !text.isEmpty else { return }
+            let letter = message.body as? [String: String]
+            guard let text = letter?["text"] ?? message.body as? String, !text.isEmpty else { return }
 
             let italian = AVSpeechSynthesisVoice.speechVoices().filter { $0.language == "it-IT" }
-            let utterance = AVSpeechUtterance(string: text)
+            let utterance: AVSpeechUtterance
+            if let phoneme = letter?["phoneme"] {
+                let ipaKey = NSAttributedString.Key(rawValue: AVSpeechSynthesisIPANotationAttribute)
+                let pronunciation = NSAttributedString(string: text, attributes: [ipaKey: phoneme])
+                utterance = AVSpeechUtterance(attributedString: pronunciation)
+            } else {
+                utterance = AVSpeechUtterance(string: text)
+            }
             utterance.voice = italian.filter { $0.gender == .female }.max {
                 $0.quality.rawValue < $1.quality.rawValue
             } ?? AVSpeechSynthesisVoice(language: "it-IT")
-            utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.85
+            utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.82
+            utterance.pitchMultiplier = letter == nil ? 1.12 : 1.06
             speech.speak(utterance)
         }
     }

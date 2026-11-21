@@ -42,7 +42,11 @@ function stopAnimal() {
 const reset = document.querySelector('#reset');
 const reward = document.querySelector('#reward');
 const feedback = document.querySelector('#feedback');
-const names = 'a bi ci di e effe gi acca i elle emme enne o pi cu erre esse ti u vi zeta'.split(' ');
+const sounds = {
+  A: 'a', B: 'b', C: 'k', D: 'd', E: 'e', F: 'f', G: 'ɡ', H: '',
+  I: 'i', L: 'l', M: 'm', N: 'n', O: 'o', P: 'p', Q: 'k', R: 'r',
+  S: 's', T: 't', U: 'u', V: 'v', Z: 't͡s'
+};
 const recognized = new Set('ACQUA ALBERO APE ARCOBALENO AZZURRO BALENA BARCA BEA BEATRICE BICICLETTA BLU BOSCO BRACCIO BUCO CALZA CANE CASA CAVALLO CENA CERCHIO CIAO CIELO COCCINELLA COLORE CONIGLIO CUORE DADO DENTE DITO DONO DUE ELEFANTE ERBA ESTATE FACCIA FAME FARFALLA FATA FIORE FOGLIA FRAGOLA FRUTTA FUOCO GALLINA GATTO GELATO GIALLO GIOCO GIORNO GIRASOLE GOMMA GRATTA GRIGIO LAGO LANA LATTE LETTERA LIBRO LUNA LUPO MAMMA MANO MARE MARRONE MELA MERAVIGLIOSAMENTE MIELE MONDO MUCCA NASO NAVE NEVE NIDO NONNA NONNO NOTTE NUVOLA OCA OCCHIO ONDA ORSO OTTO PALLA PANE PAPERA PAPA PAPÀ PAROLA PATATA PECORA PENNA PERA PESCE PIEDE PIOGGIA PIZZA PORTA PRATO QUADRATO QUATTRO RANA REGALO RETTANGOLO RICCIO ROSA ROSSO RUOTA SALE SEI SERPENTE SETTE SOLE STELLA TANA TAZZA TEMPO TIGRE TOPO TORTA TRE TRENO TRIANGOLO UNO UOVO UVA VERDE VENTO VIOLA VISO VITE ZEBRA ZERO ZIO ZUCCA'.split(' '));
 const mistakes = new Map(Object.entries({
   AQA:'ACQUA', ACUA:'ACQUA', ACQUAA:'ACQUA', GATTOO:'GATTO', CANEE:'CANE',
@@ -70,15 +74,27 @@ function animate(element, effect) {
   element.classList.add(effect);
 }
 
-function say(text) {
+function say(text, phoneme) {
   stopAnimal();
   status.hidden = true;
-  if (nativeSpeech) return nativeSpeech.postMessage(text);
+  if (phoneme === '') {
+    nativeSpeech?.postMessage(null);
+    voice?.cancel();
+    return;
+  }
+  if (nativeSpeech) {
+    nativeSpeech.postMessage(phoneme === undefined ? text : {text, phoneme});
+    return;
+  }
   if (!voice) return showError('La voce non è disponibile in questo browser.');
   voice.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
+  // Web Speech has no IPA override. Use an explicit example in browser previews.
+  const examples = {B:'b come bolla', C:'c come casa', D:'d come dado', G:'g come gatto',
+    L:'l come luna', P:'p come palla', Q:'q come quadro', T:'t come topo', Z:'z come zampa'};
+  const utterance = new SpeechSynthesisUtterance(phoneme === undefined ? text : (examples[text] || phoneme));
   utterance.lang = 'it-IT';
-  utterance.rate = .85;
+  utterance.rate = .82;
+  utterance.pitch = 1.12;
   const italian = voice.getVoices().filter(item => /^it(?:[-_]|$)/i.test(item.lang));
   const preferred = italian.find(item => /alice|federica|elsa|isabella|lucia|bianca|paola|female/i.test(item.name));
   const selected = preferred || italian.find(item => item.localService) || italian[0];
@@ -89,7 +105,7 @@ function say(text) {
   voice.speak(utterance);
 }
 
-for (const [index, letter] of [...alphabet].entries()) {
+for (const letter of alphabet) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'letter';
@@ -99,7 +115,7 @@ for (const [index, letter] of [...alphabet].entries()) {
     render();
     animate(button, 'lit');
     animate(word, 'arrive');
-    say(names[index]);
+    say(letter, sounds[letter]);
   });
   letters.append(button);
 }
@@ -164,7 +180,8 @@ const friends = [
   ['papera', 'Papera', '🦆'],
 ];
 for (const [file, name, face] of friends) {
-  const sound = new Audio('audio/' + file + '.wav');
+  const sound = new Audio('audio/' + file + '.mp3');
+  sound.volume = .65;
   sound.preload = 'auto';
   const button = document.createElement('button');
   button.type = 'button';

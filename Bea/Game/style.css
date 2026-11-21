@@ -138,3 +138,25 @@ button:active:not(:disabled){transform:translateY(2px);box-shadow:none}
  .scene{order:2;margin-top:12px}
  #status{order:3}
 }
+
+/* Keep the word, alphabet and animals together on a portrait phone. */
+@media (max-width: 480px) and (orientation: portrait) {
+  .garden { padding-top: max(8px, env(safe-area-inset-top)); padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+  .brand { margin-bottom: 7px; gap: 9px; }
+  .brand img { width: 34px; height: 34px; }
+  .activities { margin-bottom: 8px; }
+  .activities button { padding-inline: 3px; }
+  .play, .composer { padding: 9px; }
+  .word { min-height: 57px; margin: 6px auto 9px; padding-block: 7px; }
+  .actions button { min-height: 44px; }
+  .alphabet-title { margin: 12px 0 8px; }
+  .letter { min-height: 46px; }
+  #reward, #feedback { margin-top: 7px; }
+  .friends { margin-top: 9px; }
+  .friends-content { padding: 8px 9px 10px; }
+  .animal { min-height: 52px; }
+  .face { font-size: 1.55rem; }
+  .scene { display: none; }
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .activity-card { min-height: 70px; }
+}

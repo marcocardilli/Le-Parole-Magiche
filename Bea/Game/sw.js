@@ -1,8 +1,8 @@
-const CACHE = 'prato-v3';
+const CACHE = 'prato-v4';
 const ASSETS = [
   './', './index.html', './style.css', './app.js', './manifest.webmanifest',
   './prato.jpg', './icon-180.png', './icon-192.png', './icon-512.png',
-  './audio/cane.wav', './audio/gatto.wav', './audio/mucca.wav', './audio/papera.wav',
+  './audio/cane.mp3', './audio/gatto.mp3', './audio/mucca.mp3', './audio/papera.mp3',
 ];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -27,7 +27,7 @@ self.addEventListener('fetch', event => {
     const end = match[2] ? Math.min(Number(match[2]), data.byteLength - 1) : data.byteLength - 1;
     if (start > end) return new Response(null, {status: 416, headers: {'Content-Range': 'bytes */' + data.byteLength}});
     return new Response(data.slice(start, end + 1), {status: 206, headers: {
-      'Content-Type': cached.headers.get('Content-Type') || 'audio/wav',
+      'Content-Type': cached.headers.get('Content-Type') || 'audio/mpeg',
       'Content-Length': String(end - start + 1),
       'Content-Range': 'bytes ' + start + '-' + end + '/' + data.byteLength,
       'Accept-Ranges': 'bytes',
