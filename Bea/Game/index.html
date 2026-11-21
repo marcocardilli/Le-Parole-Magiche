@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff9ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+<title>Le Paroline di Bea</title>
+</head>
+<body>
+<main class="garden">
+  <header class="brand">
+    <img src="icon-192.png" alt="" width="48" height="48">
+    <h1>Le Paroline di <span>Bea</span></h1>
+  </header>
+  <nav class="activities" aria-label="Attività">
+    <button type="button" data-section="alfabeto" aria-pressed="true">🔤 Lettere</button>
+    <button type="button" data-section="numeri" aria-pressed="false">🔢 Numeri</button>
+    <button type="button" data-section="colori" aria-pressed="false">🎨 Colori</button>
+    <button type="button" data-section="forme" aria-pressed="false">🔷 Forme</button>
+  </nav>
+  <div class="layout">
+    <section class="play" id="alfabeto" aria-label="Componi una parola">
+      <div class="composer">
+        <div class="composer-heading"><h2>La mia parola</h2><span class="meadow-friends" aria-hidden="true">🐝 ✿ 🦋</span></div>
+        <div class="word" id="word" aria-live="polite"><span>Tocca una lettera</span></div>
+        <div class="actions"><button id="reset" type="button" disabled>Ricomincia</button>
+          <button id="erase" type="button" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2ZM11 9l6 6m0-6-6 6"/></svg>Cancella</button>
+          <button id="speak" type="button" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3Zm13-1a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>Ascolta</button></div><p id="reward" role="status" hidden>✨ Brava, Bea! ⭐</p><p id="feedback" role="status" hidden></p></div>
+      <h2 class="alphabet-title">Scegli le lettere</h2>
+      <div id="letters" class="letters" aria-label="Alfabeto italiano"></div>
+    </section>
+    <section class="play" id="discovery" aria-labelledby="discovery-title" hidden>
+      <h2 id="discovery-title"></h2>
+      <div id="cards" class="cards"></div>
+    </section>
+    <div class="scene" aria-hidden="true"></div></div><aside class="friends" aria-labelledby="friends-title">
+      <div class="friends-content">
+        <h2 id="friends-title">Gli amici del prato</h2>
+        <p>Tocca un animale per sentire il suo verso.</p>
+        <div id="animals" class="animals"></div>
+      </div>
+    </aside>
+  <p id="status" role="status" hidden></p>
+</main>
+</body>
+</html>
+
